@@ -1,0 +1,40 @@
+{
+  "name": "builder",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Cutewarriorlover <ruiyuliu11@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/register": "^7.13.16",
+    "cssnano": "^5.0.1",
+    "glob": "^7.1.6",
+    "gulp-dart-sass": "^1.0.2",
+    "gulp-if": "^3.0.0",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-pngquant": "^1.0.13",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-tslint": "^8.1.4",
+    "gulp-typescript": "6.0.0-alpha.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-jpegtran": "^7.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "postcss": "^8.2.13",
+    "postcss-critical-split": "^2.5.3",
+    "ts-loader": "^9.1.1",
+    "typescript": "^4.2.4",
+    "vinyl-buffer": "^1.0.1",
+    "webpack-cli": "^4.6.0",
+    "webpack-stream": "^6.1.2",
+    "webpack-strip-block": "^0.3.0"
+  },
+  "dependencies": {
+    "circular-json": "^0.5.9",
+    "eslint-loader": "^4.0.2",
+    "gulp-plumber": "^1.2.1",
+    "gulp.spritesmith": "^6.11.0",
+    "loader-utils": "^2.0.0",
+    "tslint-loader": "^3.5.4",
+    "webpack": "5.36.0"
+  }
+}
