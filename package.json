@@ -1,23 +1,28 @@
 {
   "name": "discord-bot",
   "version": "1.0.0",
-  "description": "A discord bot for the coding hub server.",
-  "main": "app.js",
-  "dependencies": {
-    "discord.js": "^12.5.3"
-  },
-  "devDependencies": {},
+  "description": "The official discord bot for The Coding Hub Discord server. A collaborative project by members of the community. https://discord.gg/84Gx47Vp4z",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/THC-Discord-Bot/discord-bot.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/THC-Discord-Bot/discord-bot/issues"
+    "url": "https://github.com/hieunguyent12/discord-bot/issues"
   },
-  "homepage": "https://github.com/THC-Discord-Bot/discord-bot#readme"
+  "homepage": "https://github.com/hieunguyent12/discord-bot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "webhook-discord": "^3.7.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
 }
