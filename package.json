@@ -4,7 +4,8 @@
   "description": "A discord bot for the coding hub server.",
   "main": "app.js",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "webhook-discord": "^3.7.7"
   },
   "devDependencies": {},
   "scripts": {

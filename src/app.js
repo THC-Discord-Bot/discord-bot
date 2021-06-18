@@ -10,7 +10,7 @@ const { resolve } = require("path");
 
 // Replace with your discord testing server webhook url
 const Hook = new webhook.Webhook(
-  "<PLACE WEBHOOK URL HERE"
+  "https://discordapp.com/api/webhooks/855281016574574672/7e5JRuhbN8URNvw1U1d3MjuqxT4NASaG0bVXbPtJdg5jZf4L0hIoeSyYxQCthriOQMZC"
 );
 
 // DISCORD SETUP
