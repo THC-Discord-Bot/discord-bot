@@ -1,4 +1,6 @@
-require("dotenv").config();
+// REQUIRES
+const Discord = require("discord.js");
+const config = require("./config.json");
 
 // TWILIO SETUP
 
@@ -7,30 +9,103 @@ const webhook = require("webhook-discord");
 const { resolve } = require("path");
 
 // Replace with your discord testing server webhook url
-// const Hook = new webhook.Webhook("<PLACE WEBHOOK URL HERE");
+const Hook = new webhook.Webhook(
+  "https://discordapp.com/api/webhooks/855281016574574672/7e5JRuhbN8URNvw1U1d3MjuqxT4NASaG0bVXbPtJdg5jZf4L0hIoeSyYxQCthriOQMZC"
+);
 
 // DISCORD SETUP
-const dsc = require("./discordClient");
+const dsc = new Discord.Client();
+dsc.login(config.BOT_TOKEN);
+
+dsc.on('ready', () => {
+  console.log('Bot has logged in')
+})
 
 // BOT COMMANDS PREFIX
-const PREFIX = "!tch";
+const prefix = "$";
 
-dsc.on("message", function (message) {
+// Event listener for when new guild members join
+dsc.on('guildMemberAdd', member => {
+  const channelId = '855280951293771778' // Welcome channel
+  const targetChannelId = '855576662162145310' // Rules and info
+
+  console.log(member)
+
+  const message = `Please welome <@${member.id}> to the server please check out ${member.guild.channels.cache.get(targetChannelId).toString()}`
+
+  const channel = member.guild.channels.cache.get(channel.id)
+  channel.send(message)
+});
+
+dsc.on("message", async (message) => {
   if (message.author.bot) return;
-  if (!message.content.startsWith(PREFIX)) return;
+  if (message.content.startsWith(prefix)) {
+    const [CMD_NAME, ...args] = message.content
+    .trim()
+    .substring(prefix.length)
+    .split(/\s+/);
 
-  const commandBody = message.content.slice(PREFIX.length + 1); // adding 1 to account for the extra space
-  const args = commandBody.split(" ");
-  const command = args.shift().toLowerCase();
+    // KICK COMMAND
+    if (CMD_NAME === 'kick') {
+      // Checking if user has permissions
+      if (!message.member.hasPermission('KICK_MEMBERS'))
+        return message.reply('You do not have permissions to use that command')
 
-  try {
-    // look for the filename (which is also the command) and executes it
-    const commandFile = require(`./commands/${command}.js`);
-    commandFile(args, message);
-  } catch (e) {
-    console.log(e);
-    message.channel.send(
-      "Command doesn't exist or an error has occurred while executing it..."
-    );
+      // If user didnt give an id or user
+      if (args.length === 0) 
+        return message.reply('Please provide an ID');
+
+      // Member = the user that was @ or a user id to be kicked
+      const member = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0])
+
+      // If the member was found in the guild then the bot kicks them...
+      if (member) {
+        member
+        .kick()
+        .then((member) => message.channel.send(`${member} was kicked`))
+        .catch((err) => message.channel.send('I cannot kick that user :('))
+      } else {
+        message.channel.send('That member was not found')
+      }
+    }
+
+    // BAN COMMAND
+    if (CMD_NAME === 'ban') {
+      // Checking if user has permissions
+      if (!message.member.hasPermission('BAN_MEMBERS'))
+        return message.reply('You do not have permissions to use that command')
+      // Checking if user providing an ID
+      if (args.length === 0) return message.reply('Please provide an ID');
+
+      // Checking ID of user to be banned if not found then sends an error
+      try {
+        const user = await message.guild.members.ban(args[0]);
+        message.channel.send('User was banned successfully')
+      } catch (err) {
+        console.log(err);
+        message.channel.send('An error occured. Either I do not have permissions or the user was not found');
+      }
+    }
+
+    // CLEAR MESSAGES
+    if (CMD_NAME === "clear") {
+      if (args[1] == undefined) {
+        message.channel.send("Usage: !atg clear <number of chats to clear>");  
+      } else {
+        message.channel.bulkDelete(args[1])
+        .then(messages => console.log(`Bulk deleted ` + args[1] + ` messages`))
+        .catch(console.error);
+        message.channel.send("Chat cleared");    
+      }                    
+    }
+
+    // HELP COMMAND
+    if (CMD_NAME == "help") {
+      message.reply(
+        "Feature soon to be added"
+      )
+    }
   }
 });
+
+dsc.login(process.env.BOT_TOKEN);
