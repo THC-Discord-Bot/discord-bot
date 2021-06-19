@@ -86,6 +86,25 @@ dsc.on("message", async (message) => {
         message.channel.send('An error occured. Either I do not have permissions or the user was not found');
       }
     }
+
+    // CLEAR MESSAGES
+    if (CMD_NAME === "clear") {
+      if (args[1] == undefined) {
+        message.channel.send("Usage: !atg clear <number of chats to clear>");  
+      } else {
+        message.channel.bulkDelete(args[1])
+        .then(messages => console.log(`Bulk deleted ` + args[1] + ` messages`))
+        .catch(console.error);
+        message.channel.send("Chat cleared");    
+      }                    
+    }
+
+    // HELP COMMAND
+    if (CMD_NAME == "help") {
+      message.reply(
+        "Feature soon to be added"
+      )
+    }
   }
 });
 
