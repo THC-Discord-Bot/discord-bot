@@ -26,6 +26,7 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('message', async (message) => {
+  console.log(message);
   if (message.author.bot) return;
   if (message.content.startsWith(primaryPrefix+'kick ')){
     kickMember(message);
