@@ -1,3 +1,5 @@
 {
-    "BOT_TOKEN": "<PUT YOUR BOT TOKEN HERE>"
+  "discord_webhookURL": "https://discordapp.com/api/webhooks/855281016574574672/7e5JRuhbN8URNvw1U1d3MjuqxT4NASaG0bVXbPtJdg5jZf4L0hIoeSyYxQCthriOQMZC",
+  "primary_prefix": "$",
+  "welcomeChannelId": "855280951293771778"
 }
