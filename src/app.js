@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { Client } = require('discord.js');
 const config = require('./config.json');
 const { 
@@ -35,6 +36,5 @@ client.on('message', async (message) => {
   if (message.content.startsWith(primaryPrefix+'clear ')){
     ClearMessages(message);
   }
-
 }
 );

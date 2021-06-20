@@ -17,24 +17,24 @@ function kickMember(message) {
   });
 }
 function BanUser(message) {
-    if (CMD_NAME === 'ban') {
-        // Checking if user has permissions
-        if (!message.member.hasPermission('BAN_MEMBERS'))
-          return message.reply('You do not have permissions to use that command');
-        // Checking if user providing an ID
-        if (args.length === 0) return message.reply('Please provide an ID');
+  if (CMD_NAME === 'ban') {
+    // Checking if user has permissions
+    if (!message.member.hasPermission('BAN_MEMBERS'))
+      return message.reply('You do not have permissions to use that command');
+    // Checking if user providing an ID
+    if (args.length === 0) return message.reply('Please provide an ID');
   
-        // Checking ID of user to be banned if not found then sends an error
-        try {
-          const user = await message.guild.members.ban(args[0]);
-          message.channel.send('User was banned successfully');
-        } catch (err) {
-          console.log(err);
-          message.channel.send(
-            'An error occured. Either I do not have permissions or the user was not found'
-          );
-        }
-      }
+    // Checking ID of user to be banned if not found then sends an error
+    try {
+      const user = message.guild.members.ban(args[0]);
+      message.channel.send('User was banned successfully');
+    } catch (err) {
+      console.log(err);
+      message.channel.send(
+        'An error occured. Either I do not have permissions or the user was not found'
+      );
+    }
+  }
 }
 
 function ClearMessages(message) {
