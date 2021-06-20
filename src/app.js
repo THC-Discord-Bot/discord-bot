@@ -8,7 +8,7 @@ const {
 } = require('./commands/general');
 
 // =========== Initialisations ===========
-const primaryPrefix = config.primaryPrefix;
+const primaryPrefix = config.primary_prefix;
 const client = new Client();
 
 // =========== Bot Initialisation ===========
@@ -35,6 +35,9 @@ client.on('message', async (message) => {
   }
   if (message.content.startsWith(primaryPrefix+'clear ')){
     ClearMessages(message);
+  }
+  if (message.content.startsWith(primaryPrefix+'test')){
+    message.reply('Im here!');
   }
 }
 );
