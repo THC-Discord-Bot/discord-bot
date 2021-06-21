@@ -1,14 +1,10 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const config = require('./config.json');
-const { 
-  kickMember, 
-  BanUser, 
-  ClearMessages 
-} = require('./commands/general');
+const commands = require('./commands/general.js');
 
 // =========== Initialisations ===========
-const primaryPrefix = config.primaryPrefix;
+const primaryPrefix = config.primary_prefix;
 const client = new Client();
 
 // =========== Bot Initialisation ===========
@@ -26,16 +22,18 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('message', async (message) => {
-  console.log(message);
-  if (message.author.bot) return;
+  if (!message.content.startsWith(primaryPrefix) || message.author.bot) return;
   if (message.content.startsWith(primaryPrefix+'kick ')){
-    kickMember(message);
+    commands.kickMember(message);
   }
   if (message.content.startsWith(primaryPrefix+'ban ')){
-    BanUser(message);
+    commands.banUser(message);
   }
   if (message.content.startsWith(primaryPrefix+'clear ')){
-    ClearMessages(message);
+    commands.clearMessages(message);
+  }
+  if (message.content.startsWith(primaryPrefix+'test')){
+    commands.test(message);
   }
 }
 );

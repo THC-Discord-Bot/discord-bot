@@ -1,3 +1,4 @@
+
 const config = require('../config.json');
 const {isStringANumber} = require('../functions/functions');
 
@@ -10,12 +11,12 @@ module.exports = {
       return message.channel.send('You need to mention a user.');
       
     const memberToBeKicked = message.mentions.members.first();
-  
+
     memberToBeKicked.kick().then((memberToBeKicked) =>{
       message.channel.send(memberToBeKicked.displayName + ' has been ejected.').catch((error) => {
         console.log(error);
         message.channel.send('I cannot kick that user :\'(');
-  
+
       });
     });
   },
