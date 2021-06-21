@@ -1,6 +1,17 @@
+# Install 
 FROM node:12
+
+# Set as default directory
 WORKDIR /
-COPY package*.json /app/
+
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
-COPY . /app/
+
+# Bundle app source
+COPY . .
+
+# Run 
 CMD ["npm", "start"]
