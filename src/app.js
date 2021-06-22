@@ -27,7 +27,7 @@ client.on('message', async (message) => {
     commands.kickMember(message);
   }
   if (message.content.startsWith(primaryPrefix+'ban ')){
-    commands.banUser(message);
+    commands.banUser(client, message);
   }
   if (message.content.startsWith(primaryPrefix+'clear ')){
     commands.clearMessages(message);
