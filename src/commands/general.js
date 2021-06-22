@@ -43,7 +43,6 @@ module.exports = {
       if (!(/^\d{16,}$/.test(potentialId)))
         return message.reply('Please mention a user or insert a valid UserID');
     }
-
     const userToBeBanned = potentialId? potentialId : message.mentions.members.first().id;
 
     client.users.fetch(userToBeBanned).then((user) => {
