@@ -1,6 +1,16 @@
 // eslint-disable-next-line no-unused-vars
 const config = require('../config.json');
 const primaryPrefix = config.primary_prefix;
+const fetch = require('node-fetch');
+
+// =========== Database Connection ===========
+const mongoose = require('mongoose');
+//Set up default mongoose connection
+var mongoDB = 'mongodb://127.0.0.1/discorddb';
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+
+//Get the default connection
+var db = mongoose.connection;
 
 module.exports = {
   kickMember: function(message) {
@@ -56,5 +66,38 @@ module.exports = {
   },
   test: function (message) {
     message.reply('I\'m here!');
+  },
+  settimezone: function (message) {
+    var timezoneModel = require('../models/timezoneModel.js');
+
+    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+    if (args[1] == undefined || null) {
+      message.channel.send('Usage: $settimezone <timezone example: EST>');
+    } else {
+      var timezone = args[1];
+      var memberid = message.member['user']['id'];
+      var username = message.member['user']['username'];
+      timezoneModel.timezoneModel.create({ userID: memberid, username: username, timezone: timezone }, function (err) {
+        if (err) return (err);
+        console.log(message.member['user']);
+      });
+    }
+  },
+  whattime: function (message) {
+    var timezoneModel = require('../models/timezoneModel.js');
+    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+    if (args[1] == undefined || null) {
+      message.channel.send('Usage: $whattime @user');
+    } else {
+      var userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
+      timezoneModel.timezoneModel.findOne({userID: userID}, function(err, user) {
+        fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
+          .then(res => res.text())
+          .then(body => {
+            body = JSON.parse(body);
+            message.reply('@' + user['username'] + '\'s time is: ' + body['datetime'] + ' ' + body['abbreviation']);
+          });
+      });
+    }
   }
 };

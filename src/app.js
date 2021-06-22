@@ -35,5 +35,11 @@ client.on('message', async (message) => {
   if (message.content.startsWith(primaryPrefix+'test')){
     commands.test(message);
   }
+  if (message.content.startsWith(primaryPrefix+'settimezone')){
+    commands.settimezone(message);
+  }
+  if (message.content.startsWith(primaryPrefix+'whattime')){
+    commands.whattime(message);
+  }
 }
 );
