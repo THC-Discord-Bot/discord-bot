@@ -14,4 +14,4 @@ services:
     volumes:
       - mongodb:/data/db
 volumes:
- mongodb:
+mongodb:
