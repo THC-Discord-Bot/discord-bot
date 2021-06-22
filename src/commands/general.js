@@ -5,12 +5,17 @@ const fetch = require('node-fetch');
 
 // =========== Database Connection ===========
 const mongoose = require('mongoose');
-//Set up default mongoose connection
-var mongoDB = 'mongodb://127.0.0.1/discorddb';
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+const mongoDB = 'mongodb://127.0.0.1/discorddb';
 
-//Get the default connection
-var db = mongoose.connection;
+// Protect server from crashing
+try {
+  //Set up default mongoose connection
+  mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+  //Get the default connection
+  const db = mongoose.connection;
+} catch (err) {
+  console.log(err)
+}
 
 module.exports = {
   kickMember: function(message) {
@@ -31,7 +36,7 @@ module.exports = {
     });
   },
   banUser: function(message) {
-    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+    const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     // Checking if user has permissions
     if (!message.member.hasPermission('BAN_MEMBERS')) {
       return message.reply('You do not have permissions to use that command');
@@ -51,11 +56,36 @@ module.exports = {
       );
     }
   },
+  // Highly unstable && INCOMPLETE
+  //giveUserWarnings: function(message) {
+  //  const args = message.content.slice(primaryPrefix.length).trim().split(' ');
+  //  const userID = message.mentions.members.first()
+
+//    if (!message.member.hasPermission('BAN_MEMBERS')) {
+//      return message.reply('You do not have permissions to use that command');
+//    }
+    // Checking if user providing an ID
+//    if (args.length === 0) {
+//      return message.reply('Please provide an @<user>');
+//    }
+    // verifying that user was warned
+//    try {
+//      user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
+//      message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
+//    } catch (err) {
+//      console.log(err);
+//      message.channel.send(
+//        'An error occured. Either I do not have permissions or the user was not found'
+//      );
+//    }
+//  
+//},
+// ===========================================================================================================
   clearMessages: function(message) {
     if (!message.member.roles.cache.some(role => role.name === 'developer')) { 
       return message.reply('You do not have permissions to use that command');
     } else {
-      var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+      const args = message.content.slice(primaryPrefix.length).trim().split(' ');
       if (args[1] == undefined) {
         message.channel.send('Usage: $clear <number of chats to clear>');
       } else {
@@ -67,29 +97,33 @@ module.exports = {
   test: function (message) {
     message.reply('I\'m here!');
   },
-  settimezone: function (message) {
-    var timezoneModel = require('../models/timezoneModel.js');
 
-    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+  // INCOMPLETE 
+  settimezone: function (message) {
+    const timezoneModel = require('../models/timeZoneModel.js');
+
+    const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     if (args[1] == undefined || null) {
       message.channel.send('Usage: $settimezone <timezone example: EST>');
     } else {
-      var timezone = args[1];
-      var memberid = message.member['user']['id'];
-      var username = message.member['user']['username'];
+      const timezone = args[1];
+      const memberid = message.member['user']['id'];
+      const username = message.member['user']['username'];
       timezoneModel.timezoneModel.create({ userID: memberid, username: username, timezone: timezone }, function (err) {
         if (err) return (err);
         console.log(message.member['user']);
       });
     }
   },
+
+  // INCOMPLETE
   whattime: function (message) {
-    var timezoneModel = require('../models/timezoneModel.js');
-    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+    const timezoneModel = require('../models/timeZoneModel.js');
+    const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     if (args[1] == undefined || null) {
       message.channel.send('Usage: $whattime @user');
     } else {
-      var userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
+      const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
       timezoneModel.timezoneModel.findOne({userID: userID}, function(err, user) {
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
@@ -101,3 +135,4 @@ module.exports = {
     }
   }
 };
+
