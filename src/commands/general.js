@@ -42,12 +42,16 @@ module.exports = {
     }
   },
   clearMessages: function(message) {
-    var args = message.content.slice(primaryPrefix.length).trim().split(' ');
-    if (args[1] == undefined) {
-      message.channel.send('Usage: $clear <number of chats to clear>');
+    if (!message.member.roles.cache.some(role => role.name === 'developer')) { 
+      return message.reply('You do not have permissions to use that command');
     } else {
-      message.channel.bulkDelete(args[1]).catch(console.error);
-      message.channel.send('Chat cleared');
+      var args = message.content.slice(primaryPrefix.length).trim().split(' ');
+      if (args[1] == undefined) {
+        message.channel.send('Usage: $clear <number of chats to clear>');
+      } else {
+        message.channel.bulkDelete(args[1]).catch(console.error);
+        message.channel.send('Chat cleared');
+      }
     }
   },
   test: function (message) {
