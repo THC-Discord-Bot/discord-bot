@@ -1,19 +1,20 @@
 const config = require('../config.json');
 const primaryPrefix = config.primary_prefix;
 const fetch = require('node-fetch');
+const { BotMessage } = require('../reusable/functions');
 // =========== Database Connection ===========
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://127.0.0.1/discorddb';
 
 // Protect server from crashing
-try {
-  //Set up default mongoose connection
-  mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-  //Get the default connection
-  const db = mongoose.connection;
-} catch (err) {
-  console.log(err);
-}
+// try {
+//   //Set up default mongoose connection
+//   mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+//   //Get the default connection
+//   const db = mongoose.connection;
+// } catch (err) {
+//   console.log(err);
+// }
 
 module.exports = {
   kickMember: function(message) {
@@ -26,38 +27,32 @@ module.exports = {
     const memberToBeKicked = message.mentions.members.first();
 
     memberToBeKicked.kick().then((memberToBeKicked) =>{
-      message.channel.send(memberToBeKicked.displayName + ' has been ejected.').catch((error) => {
-        console.log(error);
-        message.channel.send('I cannot kick that user :\'(');
-
-      });
+      BotMessage(
+        message,
+        `${memberToBeKicked.displayName} has been ejected.`,
+        `I cannot kick ${memberToBeKicked.displayName} :'(`
+      );
     });
   },
   banUser: function(client, message) {
     let potentialId;
-    let banByID = false;
     if (!message.member.hasPermission('BAN_MEMBERS'))
       return message.reply('You do not have permissions to use that command');
     if (!message.mentions.members.first()){ 
       potentialId = message.content.replace(`${primaryPrefix}ban`, '').trim();
-      if (!(/^\d+$/.test(potentialId)) || potentialId.length < 17){
+      if (!(/^\d{16,}$/.test(potentialId)))
         return message.reply('Please mention a user or insert a valid UserID');
-      } else {
-        banByID = true;
-      }
     }
-    console.log(`Ban By ID: ${banByID} || PotentialID: ${potentialId}`);
-    const userToBeBanned = banByID? potentialId: message.mentions.members.first();
 
-    message.guild.members.ban(userToBeBanned).then((userToBeBanned) =>{
-      console.log(userToBeBanned);
-      const displayName = async() => { 
-        const result = await client.users.fetch(userToBeBanned);
-        return result;
-      };
-      message.channel.send(`${displayName} has been exiled.`).catch((error) => {
-        console.log(error);
-        message.channel.send('Failed to exile user. >:[');
+    const userToBeBanned = potentialId? potentialId : message.mentions.members.first().id;
+
+    client.users.fetch(userToBeBanned).then((user) => {
+      message.guild.members.ban(userToBeBanned).then(() =>{
+        BotMessage(
+          message,
+          `${user.username} has been exiled.`,
+          `Failed to exile ${user.username}. >:[`
+        ).send();
       });
     });
   },
