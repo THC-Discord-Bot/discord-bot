@@ -122,7 +122,7 @@ module.exports = {
       message.channel.send('Usage: $whattime @user');
     } else {
       const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
-      timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
+      timeZoneModel.timeZoneModel.findOne({id: userID}, function(err, user) {
         console.log(user);
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
