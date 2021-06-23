@@ -11,7 +11,7 @@ try {
   //Set up default mongoose connection
   mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
   //Get the default connection
-  const db = mongoose.connection;
+  // const db = mongoose.connection;
 } catch (err) {
   console.log(err);
 }
@@ -122,7 +122,7 @@ module.exports = {
       message.channel.send('Usage: $whattime @user');
     } else {
       const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
-      timeZoneModel.timeZoneModel.findOne({}, function(err, user) {
+      timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
         console.log(user);
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
