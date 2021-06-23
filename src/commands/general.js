@@ -125,11 +125,13 @@ module.exports = {
       console.log(userID);
       // const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
       timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
-        fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
+        // fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
+        fetch('http://worldclockapi.com/api/json/' + user['timezone'] + '/now')
           .then(res => res.text())
           .then(body => {
             body = JSON.parse(body);
-            message.reply('@' + user['username'] + '\'s time is: ' + body['datetime'] + ' ' + body['abbreviation']);
+            console.log(body);
+            message.reply('@' + user['username'] + '\'s time is: ' + body['currentDateTime'] + ' ' + body['timeZoneName']);
           });
       });
     }
