@@ -2,6 +2,9 @@ const config = require('../config.json');
 const primaryPrefix = config.primary_prefix;
 const fetch = require('node-fetch');
 const { BotMessage } = require('../reusable/functions');
+const luxon = require('luxon');
+
+
 // =========== Database Connection ===========
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://127.0.0.1/discorddb';
@@ -17,6 +20,13 @@ const mongoDB = 'mongodb://127.0.0.1/discorddb';
 // }
 
 module.exports = {
+  timeTest:function (message) {
+    new BotMessage(
+      message,
+      `${luxon.DateTime.now()}`,
+      'Help.'
+    ).send();
+  },
   kickMember: function(message) {
     if (!message.member.hasPermission('KICK_MEMBERS'))
       return message.reply('You do not have permissions to use that command');

@@ -22,24 +22,39 @@ client.on('guildMemberAdd', (member) => {
 });
 
 client.on('message', async (message) => {
-  if (!message.content.startsWith(primaryPrefix) || message.author.bot) return;
-  if (message.content.startsWith(primaryPrefix+'kick ')){
+  const content = message.content;
+  if (!content.startsWith(primaryPrefix) || message.author.bot) return;
+  switch (content.substr(0,content.indexOf(' '))) {
+  case primaryPrefix+'kick':
     commands.kickMember(message);
-  }
-  if (message.content.startsWith(primaryPrefix+'ban ')){
+    break;
+
+  case primaryPrefix+'ban':
     commands.banUser(client, message);
-  }
-  if (message.content.startsWith(primaryPrefix+'clear ')){
+    break;
+  
+  case primaryPrefix+'clear':
     commands.clearMessages(message);
-  }
-  if (message.content.startsWith(primaryPrefix+'test')){
+    break;
+  
+  case primaryPrefix+'test':
     commands.test(message);
-  }
-  if (message.content.startsWith(primaryPrefix+'settimezone')){
+    break;
+  
+  case primaryPrefix+'settimezone':
     commands.settimezone(message);
-  }
-  if (message.content.startsWith(primaryPrefix+'whattime')){
+    break;
+
+  case primaryPrefix+'whattime':
     commands.whattime(message);
+    break;
+
+  case primaryPrefix+'timeMe':
+    commands.timeTest(message);
+    break;
+              
+  default:
+    break;
   }
 }
 );
