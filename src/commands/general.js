@@ -121,9 +121,10 @@ module.exports = {
     if (args[1] == undefined || null) {
       message.channel.send('Usage: $whattime @user');
     } else {
-      const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
+      const userID = message.mentions.users.first().id;
+      console.log(userID);
+      // const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
       timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
-        console.log(user);
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
           .then(body => {
