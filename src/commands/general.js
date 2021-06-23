@@ -7,14 +7,14 @@ const mongoose = require('mongoose');
 const mongoDB = 'mongodb://mongo:27017/discorddb';
 
 // Protect server from crashing
-// try {
-//   //Set up default mongoose connection
-//   mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-//   //Get the default connection
-//   const db = mongoose.connection;
-// } catch (err) {
-//   console.log(err);
-// }
+try {
+  //Set up default mongoose connection
+  mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+  //Get the default connection
+  const db = mongoose.connection;
+} catch (err) {
+  console.log(err);
+}
 
 module.exports = {
   kickMember: function(message) {
@@ -115,7 +115,6 @@ module.exports = {
     }
   },
 
-  // INCOMPLETE
   whattime: function (message) {
     const timeZoneModel = require('../models/timeZoneModel.js');
     const args = message.content.slice(primaryPrefix.length).trim().split(' ');
@@ -123,7 +122,8 @@ module.exports = {
       message.channel.send('Usage: $whattime @user');
     } else {
       const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
-      timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
+      timeZoneModel.timeZoneModel.findOne({}, function(err, user) {
+        console.log(user);
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
           .then(body => {
