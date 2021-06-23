@@ -1,4 +1,4 @@
 const mongoose = require('mongoose');
-const timezoneSchema = require('../schemas/timezoneSchema.js');
+const timeZoneSchema = require('../schemas/timeZoneSchema.js');
 
-module.exports.timezoneModel = mongoose.model('timezoneModel', timezoneSchema.timezoneSchema );
+module.exports.timeZoneModel = mongoose.model('timeZoneModel', timeZoneSchema.timeZoneSchema );

@@ -7,6 +7,8 @@ services:
       - 80:3000
     volumes:
       - ./:/code
+    env_file:
+    - .env
   mongo:
     image: mongo
     ports:
@@ -14,4 +16,4 @@ services:
     volumes:
       - mongodb:/data/db
 volumes:
-mongodb:
+  mongodb:

@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 
 // =========== Database Connection ===========
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://127.0.0.1/discorddb';
+const mongoDB = 'mongodb://mongo:27017/discorddb';
 
 // Protect server from crashing
 try {
@@ -100,7 +100,7 @@ module.exports = {
 
   // INCOMPLETE 
   settimezone: function (message) {
-    const timezoneModel = require('../models/timeZoneModel.js');
+    const timeZoneModel = require('../models/timeZoneModel.js');
 
     const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     if (args[1] == undefined || null) {
@@ -109,7 +109,7 @@ module.exports = {
       const timezone = args[1];
       const memberid = message.member['user']['id'];
       const username = message.member['user']['username'];
-      timezoneModel.timezoneModel.create({ userID: memberid, username: username, timezone: timezone }, function (err) {
+      timeZoneModel.timeZoneModel.create({ userID: memberid, username: username, timezone: timezone }, function (err) {
         if (err) return (err);
         console.log(message.member['user']);
       });
@@ -118,13 +118,13 @@ module.exports = {
 
   // INCOMPLETE
   whattime: function (message) {
-    const timezoneModel = require('../models/timeZoneModel.js');
+    const timeZoneModel = require('../models/timeZoneModel.js');
     const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     if (args[1] == undefined || null) {
       message.channel.send('Usage: $whattime @user');
     } else {
       const userID = args[1].replace('<','').replace('>','').replace('!','').replace('@','');
-      timezoneModel.timezoneModel.findOne({userID: userID}, function(err, user) {
+      timeZoneModel.timeZoneModel.findOne({userID: userID}, function(err, user) {
         fetch('http://worldtimeapi.org/api/timezone/'+ user['timezone'])
           .then(res => res.text())
           .then(body => {

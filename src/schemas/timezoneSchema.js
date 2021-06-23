@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-module.exports.timezoneSchema = new Schema({
+module.exports.timeZoneSchema = new Schema({
   userID: Number,
   username: String,
   timezone: String
