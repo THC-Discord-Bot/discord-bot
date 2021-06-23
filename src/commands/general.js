@@ -1,21 +1,20 @@
-// eslint-disable-next-line no-unused-vars
 const config = require('../config.json');
 const primaryPrefix = config.primary_prefix;
 const fetch = require('node-fetch');
-
+const { BotMessage } = require('../reusable/functions');
 // =========== Database Connection ===========
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://mongo:27017/discorddb';
 
 // Protect server from crashing
-try {
-  //Set up default mongoose connection
-  mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
-  //Get the default connection
-  const db = mongoose.connection;
-} catch (err) {
-  console.log(err)
-}
+// try {
+//   //Set up default mongoose connection
+//   mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+//   //Get the default connection
+//   const db = mongoose.connection;
+// } catch (err) {
+//   console.log(err);
+// }
 
 module.exports = {
   kickMember: function(message) {
@@ -28,59 +27,59 @@ module.exports = {
     const memberToBeKicked = message.mentions.members.first();
 
     memberToBeKicked.kick().then((memberToBeKicked) =>{
-      message.channel.send(memberToBeKicked.displayName + ' has been ejected.').catch((error) => {
-        console.log(error);
-        message.channel.send('I cannot kick that user :\'(');
-
-      });
+      BotMessage(
+        message,
+        `${memberToBeKicked.displayName} has been ejected.`,
+        `I cannot kick ${memberToBeKicked.displayName} :'(`
+      );
     });
   },
-  banUser: function(message) {
-    const args = message.content.slice(primaryPrefix.length).trim().split(' ');
-    // Checking if user has permissions
-    if (!message.member.hasPermission('BAN_MEMBERS')) {
+  banUser: function(client, message) {
+    let potentialId;
+    if (!message.member.hasPermission('BAN_MEMBERS'))
       return message.reply('You do not have permissions to use that command');
+    if (!message.mentions.members.first()){ 
+      potentialId = message.content.replace(`${primaryPrefix}ban`, '').trim();
+      if (!(/^\d{16,}$/.test(potentialId)))
+        return message.reply('Please mention a user or insert a valid UserID');
     }
-    // Checking if user providing an ID
-    if (args.length === 0) {
-      return message.reply('Please provide an ID');
-    }
-    // Checking ID of user to be banned if not found then sends an error
-    try {
-      const user = message.guild.members.ban(args[0]);
-      message.channel.send('User was banned successfully');
-    } catch (err) {
-      console.log(err);
-      message.channel.send(
-        'An error occured. Either I do not have permissions or the user was not found'
-      );
-    }
+    const userToBeBanned = potentialId? potentialId : message.mentions.members.first().id;
+
+    client.users.fetch(userToBeBanned).then((user) => {
+      message.guild.members.ban(userToBeBanned).then(() =>{
+        BotMessage(
+          message,
+          `${user.username} has been exiled.`,
+          `Failed to exile ${user.username}. >:[`
+        ).send();
+      });
+    });
   },
   // Highly unstable && INCOMPLETE
   //giveUserWarnings: function(message) {
   //  const args = message.content.slice(primaryPrefix.length).trim().split(' ');
   //  const userID = message.mentions.members.first()
 
-//    if (!message.member.hasPermission('BAN_MEMBERS')) {
-//      return message.reply('You do not have permissions to use that command');
-//    }
-    // Checking if user providing an ID
-//    if (args.length === 0) {
-//      return message.reply('Please provide an @<user>');
-//    }
-    // verifying that user was warned
-//    try {
-//      user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
-//      message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
-//    } catch (err) {
-//      console.log(err);
-//      message.channel.send(
-//        'An error occured. Either I do not have permissions or the user was not found'
-//      );
-//    }
-//  
-//},
-// ===========================================================================================================
+  //    if (!message.member.hasPermission('BAN_MEMBERS')) {
+  //      return message.reply('You do not have permissions to use that command');
+  //    }
+  // Checking if user providing an ID
+  //    if (args.length === 0) {
+  //      return message.reply('Please provide an @<user>');
+  //    }
+  // verifying that user was warned
+  //    try {
+  //      user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
+  //      message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
+  //    } catch (err) {
+  //      console.log(err);
+  //      message.channel.send(
+  //        'An error occured. Either I do not have permissions or the user was not found'
+  //      );
+  //    }
+  //  
+  //},
+  // ===========================================================================================================
   clearMessages: function(message) {
     if (!message.member.roles.cache.some(role => role.name === 'developer')) { 
       return message.reply('You do not have permissions to use that command');
