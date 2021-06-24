@@ -41,5 +41,8 @@ client.on('message', async (message) => {
   if (message.content.startsWith(primaryPrefix+'whattime')){
     commands.whattime(message);
   }
+  if (message.content.startsWith(primaryPrefix+'warn ')){
+    commands.giveUserWarnings(message);
+  }
 }
 );
