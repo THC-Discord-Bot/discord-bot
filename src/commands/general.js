@@ -34,6 +34,7 @@ module.exports = {
       );
     });
   },
+
   banUser: function(client, message) {
     let potentialId;
     if (!message.member.hasPermission('BAN_MEMBERS'))
@@ -55,31 +56,41 @@ module.exports = {
       });
     });
   },
-  // Highly unstable && INCOMPLETE
-  //giveUserWarnings: function(message) {
-  //  const args = message.content.slice(primaryPrefix.length).trim().split(' ');
-  //  const userID = message.mentions.members.first()
 
-  //    if (!message.member.hasPermission('BAN_MEMBERS')) {
-  //      return message.reply('You do not have permissions to use that command');
-  //    }
+  // Highly unstable && INCOMPLETE
+  giveUserWarnings: function(message) {
+    const timeZoneModel = require('../models/timeZoneModel.js');
+    const args = message.content.slice(primaryPrefix.length).trim().split(' ');
+    const userID = message.mentions.members.first()
+
+      if (!message.member.hasPermission('BAN_MEMBERS')) {
+        return message.reply('You do not have permissions to use that command');
+      }
   // Checking if user providing an ID
-  //    if (args.length === 0) {
-  //      return message.reply('Please provide an @<user>');
-  //    }
+      if(args[1] == null || args[1] == undefined) {
+        return message.reply('Please provide an @<user>');
+      }
+  // Add data to DB
+      const memberid = message.member['user']['id'];
+      const username = message.member['user']['username'];
+      let warnings = 0
+
+      timeZoneModel.timeZoneModel.create({ userID: memberid, username: username, warnings: warnings + 1 }, function (err) {
+        if (err) return (err);
+        console.log(message.member['user']);
+      });
   // verifying that user was warned
-  //    try {
-  //      user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
-  //      message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
-  //    } catch (err) {
-  //      console.log(err);
-  //      message.channel.send(
-  //        'An error occured. Either I do not have permissions or the user was not found'
-  //      );
-  //    }
-  //  
-  //},
-  // ===========================================================================================================
+      try {
+        user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
+        message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
+      } catch (err) {
+        console.log(err);
+        message.channel.send(
+          'An error occured. Either I do not have permissions or the user was not found'
+        );
+      } 
+  },
+
   clearMessages: function(message) {
     if (!message.member.roles.cache.some(role => role.name === 'developer')) { 
       return message.reply('You do not have permissions to use that command');
