@@ -42,7 +42,7 @@ client.on('message', async (message) => {
     commands.whattime(message);
   }
   if (message.content.startsWith(primaryPrefix+'warn ')){
-    commands.giveUserWarnings(message);
+    commands.giveUserWarnings(client, message);
   }
 }
 );
