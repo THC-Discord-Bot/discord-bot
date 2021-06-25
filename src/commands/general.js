@@ -58,8 +58,8 @@ module.exports = {
   },
 
   // Highly unstable && INCOMPLETE
-  giveUserWarnings: function(message) {
-    const timeZoneModel = require('../models/timeZoneModel.js');
+  giveUserWarnings: function(client, message) {
+    const userWarnModel = require('../models/userWarnModel.js');
     const args = message.content.slice(primaryPrefix.length).trim().split(' ');
     const userID = message.mentions.members.first()
 
@@ -71,11 +71,33 @@ module.exports = {
         return message.reply('Please provide an @<user>');
       }
   // Add data to DB
-      const memberid = message.member['user']['id'];
-      const username = message.member['user']['username'];
+      const memberid = message.mentions.members.first();
+      const username = message.mentions.users.first().username;
       let warnings = 0
 
-      timeZoneModel.timeZoneModel.create({ userID: memberid, username: username, warnings: warnings + 1 }, function (err) {
+      userWarnModel.userWarnModel.findOne({userID: userID}, function(err, user) {
+        if(user) {
+        var updatedWarnings = user['warnings']+1;
+      userWarnModel.userWarnModel.update({warnings:updatedWarnings}, function (err, result) {
+      if (err){
+          console.log(err)
+      }else{
+          console.log("Result :", result)
+          if (updatedWarnings == 3); 
+          client.users.fetch(memberid).then((user) => {
+            message.guild.members.ban(memberid).then(() =>{
+              BotMessage(
+                message,
+                `${user.username} has been exiled.`,
+                `Failed to exile ${user.username}. >:[`
+              ).send();
+            });
+          });
+      }
+  });
+}
+});
+      userWarnModel.userWarnModel.create({ userID: memberid, username: username, warnings: warnings + 1 }, function (err) {
         if (err) return (err);
         console.log(message.member['user']);
       });
