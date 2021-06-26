@@ -61,56 +61,56 @@ module.exports = {
   giveUserWarnings: function(client, message) {
     const userWarnModel = require('../models/userWarnModel.js');
     const args = message.content.slice(primaryPrefix.length).trim().split(' ');
-    const userID = message.mentions.members.first()
+    const userID = message.mentions.members.first();
 
-      if (!message.member.hasPermission('BAN_MEMBERS')) {
-        return message.reply('You do not have permissions to use that command');
-      }
-  // Checking if user providing an ID
-      if(args[1] == null || args[1] == undefined) {
-        return message.reply('Please provide an @<user>');
-      }
-  // Add data to DB
-      const memberid = message.mentions.members.first();
-      const username = message.mentions.users.first().username;
-      let warnings = 0
+    if (!message.member.hasPermission('BAN_MEMBERS')) {
+      return message.reply('You do not have permissions to use that command');
+    }
+    // Checking if user providing an ID
+    if(args[1] == null || args[1] == undefined) {
+      return message.reply('Please provide an @<user>');
+    }
+    // Add data to DB
+    const memberid = message.mentions.members.first();
+    const username = message.mentions.users.first().username;
+    let warnings = 0;
 
-      userWarnModel.userWarnModel.findOne({userID: userID}, function(err, user) {
-        if(user) {
+    userWarnModel.userWarnModel.findOne({userID: userID}, function(err, user) {
+      if(user) {
         var updatedWarnings = user['warnings']+1;
-      userWarnModel.userWarnModel.update({warnings:updatedWarnings}, function (err, result) {
-      if (err){
-          console.log(err)
-      }else{
-          console.log("Result :", result)
-          if (updatedWarnings == 3); 
-          client.users.fetch(memberid).then((user) => {
-            message.guild.members.ban(memberid).then(() =>{
-              BotMessage(
-                message,
-                `${user.username} has been exiled.`,
-                `Failed to exile ${user.username}. >:[`
-              ).send();
+        userWarnModel.userWarnModel.update({warnings:updatedWarnings}, function (err, result) {
+          if (err){
+            console.log(err);
+          }else{
+            console.log('Result :', result);
+            if (updatedWarnings == 3); 
+            client.users.fetch(memberid).then((user) => {
+              message.guild.members.ban(memberid).then(() =>{
+                BotMessage(
+                  message,
+                  `${user.username} has been exiled.`,
+                  `Failed to exile ${user.username}. >:[`
+                ).send();
+              });
             });
-          });
+          }
+        });
       }
-  });
-}
-});
-      userWarnModel.userWarnModel.create({ userID: memberid, username: username, warnings: warnings + 1 }, function (err) {
-        if (err) return (err);
-        console.log(message.member['user']);
-      });
-  // verifying that user was warned
-      try {
-        user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`)
-        message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`)
-      } catch (err) {
-        console.log(err);
-        message.channel.send(
-          'An error occured. Either I do not have permissions or the user was not found'
-        );
-      } 
+    });
+    userWarnModel.userWarnModel.create({ userID: memberid, username: username, warnings: warnings + 1 }, function (err) {
+      if (err) return (err);
+      console.log(message.member['user']);
+    });
+    // verifying that user was warned
+    try {
+      user.send(`${userID}, You have been warned for doing ${message} in the server ${message.guild.name}`);
+      message.channel.send(`${userID} has been warned for doing ${message} :thumbsdown:`);
+    } catch (err) {
+      console.log(err);
+      message.channel.send(
+        'An error occured. Either I do not have permissions or the user was not found'
+      );
+    } 
   },
 
   clearMessages: function(message) {
