@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client } = require('discord.js');
 const config = require('./config.json');
 const commands = require('./commands/general.js');
+const time = require('./commands/timezone');
 
 // =========== Initialisations ===========
 const primaryPrefix = config.primary_prefix;
@@ -43,6 +44,15 @@ client.on('message', async (message) => {
   }
   if (message.content.startsWith(primaryPrefix+'warn ')){
     commands.giveUserWarnings(client, message);
+  }
+  if (message.content.startsWith(primaryPrefix+'luxTZSet')){
+    time.luxTimezoneSet(message);
+  }
+  if (message.content.startsWith(primaryPrefix+'luxTime')){
+    time.luxTime(message);
+  }
+  if(message.content.startsWith(primaryPrefix+'luxUserTime')){
+    time.luxUserTime(message);
   }
 }
 );
